@@ -16,3 +16,13 @@
           {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
           #'clojure.core/in-ns
           {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}})))
+
+(deftest usages-in-def-and-fn-body
+  (is (= [[5 30] ; start of reverse :invoke in def init
+          [8 3]  ; start of str :invoke in def init
+          [10 5]] ; start of str :invoke in let body, which is weird
+         (get-in (index-usages {}
+                               'duelinmarkers.insfactor.subjects.ns-using-var
+                               (ana/analyze-ns 'duelinmarkers.insfactor.subjects.ns-using-var))
+                 [#'duelinmarkers.insfactor.subjects.ns-with-def/something
+                  'duelinmarkers.insfactor.subjects.ns-using-var]))))
