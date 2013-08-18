@@ -53,7 +53,7 @@
   (let [z (zipper ns-analysis)]
     (loop [loc (next-non-branch z) index index]
       (let [index (if-let [v (:var (z/node loc))]
-                    (assoc-in index [v ns-sym] (find-line-and-col loc))
+                    (update-in index [v ns-sym] (fnil conj []) (find-line-and-col loc))
                     index)]
         (if (z/end? loc)
           index

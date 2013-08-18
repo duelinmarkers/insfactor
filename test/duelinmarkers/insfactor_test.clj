@@ -7,12 +7,12 @@
   (is (= (index-usages {} 'duelinmarkers.insfactor.subjects.minimal-ns
                        (ana/analyze-ns 'duelinmarkers.insfactor.subjects.minimal-ns))
          {#'clojure.core/conj
-          {'duelinmarkers.insfactor.subjects.minimal-ns [1 1]}
+          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
           #'clojure.core/*loaded-libs*
-          {'duelinmarkers.insfactor.subjects.minimal-ns [1 1]}
+          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
           #'clojure.core/deref
-          {'duelinmarkers.insfactor.subjects.minimal-ns [1 1]}
+          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
           #'clojure.core/commute
-          {'duelinmarkers.insfactor.subjects.minimal-ns [1 1]}
+          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
           #'clojure.core/in-ns
-          {'duelinmarkers.insfactor.subjects.minimal-ns [1 1]}})))
+          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}})))
