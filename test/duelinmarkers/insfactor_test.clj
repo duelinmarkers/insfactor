@@ -19,7 +19,7 @@
 
 (deftest usages-in-def-and-fn-body
   (is (= [[5 30] ; start of reverse :invoke in def init
-          [8 3]  ; start of str :invoke in def init
+          [8 3]  ; start of str :invoke in fn body
           [10 5]] ; start of str :invoke in let body, which is weird
          (get-in (index-usages {}
                                'duelinmarkers.insfactor.subjects.ns-using-var
