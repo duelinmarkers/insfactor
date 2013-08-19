@@ -18,7 +18,11 @@
                       :static-method :args
                       :instance-method (fn [{:keys [target args]}]
                                          (cons target args))
-                      :map :keyvals})
+                      :map :keyvals
+                      :try (fn [{:keys [try-expr finally-expr catch-exprs]}]
+                             (cons try-expr
+                                   (concat (map :handler catch-exprs)
+                                           (list finally-expr))))})
 
 (defn- branch? [node]
   (if (map? node)

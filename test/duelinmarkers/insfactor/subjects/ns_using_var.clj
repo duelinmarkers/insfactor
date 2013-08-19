@@ -7,4 +7,10 @@
 (defn my-func [s]
   (str s something)
   (let [ss something]
-    (str s ss)))
+    (str s ss))
+  (try
+    (println something)
+    (catch Exception e
+      (println e something))
+    (finally
+      (println "finally!" something))))
