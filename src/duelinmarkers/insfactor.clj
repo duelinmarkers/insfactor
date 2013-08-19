@@ -27,6 +27,7 @@
 (defn- branch? [node]
   (if (map? node)
     (contains? op->children-fn (:op node))
+    ;; TODO also :constant ops w/ coll vals?
     (coll? node)))
 
 (defn- children [node]
@@ -53,10 +54,19 @@
       (recur next-loc)
       next-loc)))
 
+(defn indexable-val [{:keys [op] :as node}]
+  (condp = op
+    :var (:var node)
+    :the-var (:var node)
+    :keyword (:val node)
+    :string (:val node)
+    ;; :constant (:val node)
+    nil))
+
 (defn index-usages [index ns-sym ns-analysis]
   (let [z (zipper ns-analysis)]
     (loop [loc (next-non-branch z) index index]
-      (let [index (if-let [v (:var (z/node loc))]
+      (let [index (if-let [v (indexable-val (z/node loc))]
                     (update-in index [v ns-sym] (fnil conj []) (find-line-and-col loc))
                     index)]
         (if (z/end? loc)

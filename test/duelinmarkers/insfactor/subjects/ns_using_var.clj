@@ -13,4 +13,6 @@
     (catch Exception e
       (println e something))
     (finally
-      (println "finally!" something))))
+      (println "finally!" something)))
+  (println {something :kw
+            :kw something}))
