@@ -77,6 +77,14 @@
   (let [ns-analysis (ana/analyze-ns ns-sym)]
     (swap! index index-usages ns-sym ns-analysis)))
 
+(defn find-usages [val]
+  (vec (@index val)))
+
+(comment
+  (index! 'duelinmarkers.insfactor)
+  (find-usages #'index-usages)
+  )
+
 ;;;;;;;;; Unintuitive ops
 
 ;; `ns is a :do :op with
