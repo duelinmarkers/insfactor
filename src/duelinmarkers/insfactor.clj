@@ -19,6 +19,7 @@
                       :instance-method (fn [{:keys [target args]}]
                                          (cons target args))
                       :map :keyvals
+                      :set :keys
                       :try (fn [{:keys [try-expr finally-expr catch-exprs]}]
                              (cons try-expr
                                    (concat (map :handler catch-exprs)
