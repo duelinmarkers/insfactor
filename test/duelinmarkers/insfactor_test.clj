@@ -1,7 +1,8 @@
 (ns duelinmarkers.insfactor-test
   (:require [clojure.test :refer :all]
             [duelinmarkers.insfactor :refer :all]
-            [clojure.tools.analyzer :as ana]))
+            [clojure.tools.analyzer :as ana]
+            duelinmarkers.insfactor.subjects.ns-with-def))
 
 (deftest usage-index-of-minimal-ns
   (is (= (index-usages {} 'duelinmarkers.insfactor.subjects.minimal-ns
