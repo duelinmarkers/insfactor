@@ -55,20 +55,37 @@
       (recur next-loc)
       next-loc)))
 
-(defn indexable-val [{:keys [op] :as node}]
+(defn zipper-seq
+  ([zip] (zipper-seq (z/node zip) (z/next zip)))
+  ([node next-loc]
+     (cons node
+           (when-not (z/end? next-loc)
+             (lazy-seq (zipper-seq (z/node next-loc) (z/next next-loc)))))))
+
+(defn coll->scalar-members [coll]
+  (remove coll? (zipper-seq (z/zipper coll? seq nil coll))))
+
+(defn indexable-vals [{:keys [op] :as node}]
   (condp = op
-    :var (:var node)
-    :the-var (:var node)
-    :keyword (:val node)
-    :string (:val node)
-    ;; :constant (:val node)
+    :var (list (:var node))
+    :the-var (list (:var node))
+    :keyword (list (:val node))
+    :string (list (:val node))
+    :constant (let [{:keys [val]} node]
+                (when (coll? val) (coll->scalar-members val)))
+    ;; example vals of :op :constant
+    ;; #"regex"
+    ;; {:expects # {"load-file"}}
+    ;; {:arglists ([src]) :column 1 :line 6 :file "some.string"} (in :def :meta)
     nil))
 
 (defn index-usages [index ns-sym ns-analysis]
+  ; TODO remove existing indexed usages by ns-sym
   (let [z (zipper ns-analysis)]
     (loop [loc (next-non-branch z) index index]
-      (let [index (if-let [v (indexable-val (z/node loc))]
-                    (update-in index [v ns-sym] (fnil conj []) (find-line-and-col loc))
+      (let [index (if-let [vals (seq (indexable-vals (z/node loc)))]
+                    (reduce #(update-in %1 [%2 ns-sym] (fnil conj []) (find-line-and-col loc))
+                            index vals)
                     index)]
         (if (z/end? loc)
           index
