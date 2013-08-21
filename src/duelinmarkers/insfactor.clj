@@ -28,7 +28,6 @@
 (defn- branch? [node]
   (if (map? node)
     (contains? op->children-fn (:op node))
-    ;; TODO also :constant ops w/ coll vals?
     (coll? node)))
 
 (defn- children [node]
@@ -73,10 +72,6 @@
     :string (list (:val node))
     :constant (let [{:keys [val]} node]
                 (when (coll? val) (coll->scalar-members val)))
-    ;; example vals of :op :constant
-    ;; #"regex"
-    ;; {:expects # {"load-file"}}
-    ;; {:arglists ([src]) :column 1 :line 6 :file "some.string"} (in :def :meta)
     nil))
 
 (defn index-usages [index ns-sym ns-analysis]
