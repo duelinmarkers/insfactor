@@ -23,7 +23,10 @@
                       :try (fn [{:keys [try-expr finally-expr catch-exprs]}]
                              (cons try-expr
                                    (concat (map :handler catch-exprs)
-                                           (list finally-expr))))})
+                                           (list finally-expr))))
+                      :new :args
+                      :catch (fn [{:keys [handler]}] (list handler))
+                      })
 
 (defn- branch? [node]
   (if (map? node)
