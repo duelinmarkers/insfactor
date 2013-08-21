@@ -80,7 +80,6 @@
     nil))
 
 (defn index-usages [index ns-sym ns-analysis]
-  ; TODO remove existing indexed usages by ns-sym
   (let [z (zipper ns-analysis)]
     (loop [loc (next-non-branch z) index index]
       (let [index (if-let [vals (seq (indexable-vals (z/node loc)))]
@@ -91,8 +90,12 @@
           index
           (recur (next-non-branch loc) index))))))
 
+(defn remove-usages [index ns-sym]
+  (reduce #(update-in %1 [%2] dissoc ns-sym) index (keys index)))
+
 (defn index! [ns-sym]
   (let [ns-analysis (ana/analyze-ns ns-sym)]
+    (swap! index remove-usages ns-sym)
     (swap! index index-usages ns-sym ns-analysis)))
 
 (defn find-usages [val]
