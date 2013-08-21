@@ -97,7 +97,8 @@
     (swap! index index-usages ns-sym ns-analysis)))
 
 (defn find-usages [val]
-  (vec (@index val)))
+  (cons (str "Usages of " val)
+        (map (fn [[k locs]] (cons k (map seq (sort locs)))) (@index val))))
 
 (comment
   (index! 'duelinmarkers.insfactor)
