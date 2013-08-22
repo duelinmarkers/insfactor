@@ -1,0 +1,33 @@
+
+* insfactor.el
+** Format results more pretty like
+*** Show content of matched line (though this will sometimes be wrong)
+*** incorporate column? Not sure this is useful.
+** Fix input reading so it can support strings
+* Improve indexing
+** Try :children option to analyze-ns -- might allow killing op->children-fn
+** Index :def :meta
+*** For most defs, :meta is an :op :constant with a map for :val
+*** For tests, :meta is an :op :map with a keyval pair :op :keyword :val :test and :op :fn-expr
+*** Probably don't want to index :file, :line, :column, :arglists
+** Index :def as usage of defined var
+** Index class and/or method in interop-type ops (though they appear in non-interop code)
+*** :static-method
+*** :instance-method
+*** :new
+*** Currently just indexing :args for all those
+** Index type-hints
+** Stop indexing ns expansion? Could ignore almost everything at [1 1]
+*** Maybe ignore everything and enhance the index with stuff taken from ns-refers, ns-aliases, etc.
+** Other :op :constant types we may want to index
+*** regex
+
+* Other functionality
+** "insfactor-explain"
+*** Looks at position in editor, provides a summary of what's happening there
+    e.g., on a fn being invoked, tells you what fn, or if it's a static method
+*** Probably requires a different index than find-usages
+** "insfactor-rename-var"
+** "insfactor-move-def"
+** "insfactor-rename-local"
+** "insfactor-expand-scope-of-local"
