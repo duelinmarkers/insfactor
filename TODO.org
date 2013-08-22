@@ -5,6 +5,7 @@
 *** incorporate column? Not sure this is useful.
 ** Fix input reading so it can support strings
 * Improve indexing
+** Add fn for indexing whole project
 ** Try :children option to analyze-ns -- might allow killing op->children-fn
 ** Index :def :meta
 *** For most defs, :meta is an :op :constant with a map for :val
