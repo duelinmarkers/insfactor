@@ -102,4 +102,6 @@
 (comment
   (index! 'duelinmarkers.insfactor)
   (find-usages #'index-usages)
+  (reset! index {})
+  @index
   )
