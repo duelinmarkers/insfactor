@@ -5,20 +5,14 @@
             duelinmarkers.insfactor.subjects.ns-with-def))
 
 (deftest usage-index-of-minimal-ns
-  (is (= (index-usages {} 'duelinmarkers.insfactor.subjects.minimal-ns
+  (is (= (index-usages {} "/path/to/minimal-ns.clj"
                        (ana/analyze-ns 'duelinmarkers.insfactor.subjects.minimal-ns))
-         {#'clojure.core/conj
-          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
-          #'clojure.core/*loaded-libs*
-          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
-          #'clojure.core/deref
-          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
-          #'clojure.core/commute
-          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
-          #'clojure.core/refer
-          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}
-          #'clojure.core/in-ns
-          {'duelinmarkers.insfactor.subjects.minimal-ns [[1 1]]}})))
+         {#'clojure.core/conj {"/path/to/minimal-ns.clj" [[1 1]]}
+          #'clojure.core/*loaded-libs* {"/path/to/minimal-ns.clj" [[1 1]]}
+          #'clojure.core/deref {"/path/to/minimal-ns.clj" [[1 1]]}
+          #'clojure.core/commute {"/path/to/minimal-ns.clj" [[1 1]]}
+          #'clojure.core/refer {"/path/to/minimal-ns.clj" [[1 1]]}
+          #'clojure.core/in-ns {"/path/to/minimal-ns.clj" [[1 1]]}})))
 
 (deftest usages-of-var-in-many-contexts
   (is (= [[5 30] ; start of reverse :invoke in def init
@@ -31,17 +25,26 @@
           [17 3] ; and again, since we use it twice
           ]
          (get-in (index-usages {}
-                               'duelinmarkers.insfactor.subjects.ns-using-var
+                               "/path/to/ns_using_var.clj"
                                (ana/analyze-ns 'duelinmarkers.insfactor.subjects.ns-using-var))
                  [#'duelinmarkers.insfactor.subjects.ns-with-def/something
-                  'duelinmarkers.insfactor.subjects.ns-using-var]))))
+                  "/path/to/ns_using_var.clj"]))))
 
 (deftest usages-of-keyword
   (is (= [[17 3] ; start of println around map literal
           [17 3] ; and again, since we use it twice
           ]
          (get-in (index-usages {}
-                               'duelinmarkers.insfactor.subjects.ns-using-var
+                               "/path/to/ns_using_var.clj"
                                (ana/analyze-ns 'duelinmarkers.insfactor.subjects.ns-using-var))
-                 [:kw
-                  'duelinmarkers.insfactor.subjects.ns-using-var]))))
+                 [:kw "/path/to/ns_using_var.clj"]))))
+
+(deftest of-zipper-seq
+  (is (= [[1 [2 3] 4] 1 [2 3] 2 3 4]
+         (zipper-seq (clojure.zip/vector-zip [1 [2 3] 4]))))
+  (is (= [[]]
+         (zipper-seq (clojure.zip/vector-zip [])))))
+
+(deftest of-coll->scalar-members
+  (is (= [:foo 1 2 :bar "s"]
+         (coll->scalar-members {:foo [1 2] :bar [["s"]]}))))
