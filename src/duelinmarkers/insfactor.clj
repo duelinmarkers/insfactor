@@ -57,12 +57,11 @@
       (recur next-loc)
       next-loc)))
 
-(defn zipper-seq
-  ([zip] (zipper-seq (z/node zip) (z/next zip)))
-  ([node next-loc]
-     (cons node
-           (when-not (z/end? next-loc)
-             (lazy-seq (zipper-seq (z/node next-loc) (z/next next-loc)))))))
+(defn zipper-seq [zip]
+  (->> zip
+       (iterate z/next)
+       (take-while (comp not z/end?))
+       (map z/node)))
 
 (defn coll->scalar-members [coll]
   (remove coll? (zipper-seq (z/zipper coll? seq nil coll))))
