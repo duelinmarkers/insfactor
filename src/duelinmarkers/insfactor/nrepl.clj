@@ -7,10 +7,10 @@
   (symbol (fnext (re-find #"\(ns\s+([a-zA-Z0-9.*+!?_-]+)" src))))
 
 (defn index-on-load [h]
-  (fn [{:keys [op file] :as msg}]
+  (fn [{:keys [op file file-path] :as msg}]
     (h msg)
     (when (= op "load-file")
-      (insfactor/index! (src->ns-sym file)))))
+      (insfactor/index! (src->ns-sym file) file-path))))
 
 (middleware/set-descriptor! #'index-on-load
                             {:expects #{"load-file"}})

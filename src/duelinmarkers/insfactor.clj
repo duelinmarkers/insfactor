@@ -91,10 +91,10 @@
 (defn remove-usages [index ns-sym]
   (reduce #(update-in %1 [%2] dissoc ns-sym) index (keys index)))
 
-(defn index! [ns-sym]
+(defn index! [ns-sym src-file-path]
   (let [ns-analysis (ana/analyze-ns ns-sym)]
-    (swap! index remove-usages ns-sym)
-    (swap! index index-usages ns-sym ns-analysis)))
+    (swap! index remove-usages src-file-path)
+    (swap! index index-usages src-file-path ns-analysis)))
 
 (defn find-usages [val]
   (cons (str "Usages of " val)
