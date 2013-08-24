@@ -39,12 +39,6 @@
                                (ana/analyze-ns 'duelinmarkers.insfactor.subjects.ns-using-var))
                  [:kw "/path/to/ns_using_var.clj"]))))
 
-(deftest of-zipper-seq
-  (is (= [[1 [2 3] 4] 1 [2 3] 2 3 4]
-         (zipper-seq (clojure.zip/vector-zip [1 [2 3] 4]))))
-  (is (= [[]]
-         (zipper-seq (clojure.zip/vector-zip [])))))
-
 (deftest of-coll->scalar-members
   (is (= [:foo 1 2 :bar "s"]
          (coll->scalar-members {:foo [1 2] :bar [["s"]]}))))

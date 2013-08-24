@@ -1,6 +1,7 @@
 (ns duelinmarkers.insfactor
   (:require [clojure.zip :as z]
-            [clojure.tools.analyzer :as ana]))
+            [clojure.tools.analyzer :as ana]
+            [duelinmarkers.insfactor.zip :as inzip]))
 
 (defonce index (atom {}))
 
@@ -39,9 +40,7 @@
     (seq node)))
 
 (defn zipper [ns-analysis]
-  (z/zipper branch? children
-            #(throw (UnsupportedOperationException. "no editing!"))
-            ns-analysis))
+  (z/zipper branch? children inzip/no-editing ns-analysis))
 
 (defn find-line-and-col [loc]
   (let [n (z/node loc)
@@ -57,14 +56,8 @@
       (recur next-loc)
       next-loc)))
 
-(defn zipper-seq [zip]
-  (->> zip
-       (iterate z/next)
-       (take-while (comp not z/end?))
-       (map z/node)))
-
 (defn coll->scalar-members [coll]
-  (remove coll? (zipper-seq (z/zipper coll? seq nil coll))))
+  (remove coll? (inzip/zipper-seq (z/zipper coll? seq nil coll))))
 
 (defn indexable-vals [{:keys [op] :as node}]
   (condp = op
