@@ -1,7 +1,10 @@
 (ns duelinmarkers.insfactor.project
   (:require [clojure.java.io :as io]
             [clojure.string :as string]
-            [duelinmarkers.insfactor :as insfactor]))
+            [clojure.zip :as z]
+            [duelinmarkers.insfactor :as insfactor]
+            [duelinmarkers.insfactor.zip :as inzip])
+  (:import [java.io File]))
 
 (defn find-lein-project-file []
   (loop [dir (.getCanonicalFile (io/file "."))]
@@ -29,9 +32,16 @@
     (src-paths-from-lein-project-file lein-project-file)
     (throw (Exception. "Couldn't find lein project.clj"))))
 
-(defn find-src-files [src-path]
+(defn path-relative-to [base-path child]
+  (-> (.getCanonicalPath child)
+      (string/replace (.getCanonicalPath base-path) "")
+      (subs 1)))
 
-  )
+(defn find-src-files [src-path]
+  (map #(vector src-path (path-relative-to src-path %))
+       (filter #(-> % .getPath (.endsWith ".clj"))
+               (inzip/zipper-seq
+                (inzip/file-zipper src-path)))))
 
 (defn ->ns-sym [relative-src-file-path]
   (-> relative-src-file-path
