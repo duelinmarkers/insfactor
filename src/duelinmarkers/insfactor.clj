@@ -47,7 +47,9 @@
         {:keys [line column]} (if (map? n) (:env n) nil)]
     (if (and line column)
       [line column]
-      (recur (z/up loc)))))
+      (if-let [parent (z/up loc)]
+        (recur parent)
+        nil))))
 
 (defn next-non-branch [loc]
   (let [next-loc (z/next loc)]
