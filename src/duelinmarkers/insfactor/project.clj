@@ -52,6 +52,7 @@
 
 (defn index-project! []
   (doseq [src-path (find-project-src-paths)
+          :let [_ (println "Indexing src-path" src-path)]
           [src-path relative-src-file-path] (find-src-files src-path)]
     (insfactor/index! (->ns-sym relative-src-file-path)
                       (.getPath (io/file src-path relative-src-file-path)))))
