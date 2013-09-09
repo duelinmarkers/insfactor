@@ -1,4 +1,4 @@
-(defproject duelinmarkers/insfactor "0.1.0"
+(defproject duelinmarkers/insfactor "0.1.1-SNAPSHOT"
   :description "Tool to ease Clojure refactoring"
   :url "http://github.com/duelinmarkers/insfactor"
   :license {:name "Eclipse Public License"
