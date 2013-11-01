@@ -95,8 +95,8 @@
         (map (fn [[k locs]] (cons k (map seq (sort locs)))) (@index val))))
 
 (comment
-  (index! 'duelinmarkers.insfactor)
+  (index! 'duelinmarkers.insfactor "/foo/duelinmarkers/insfactor.clj")
   (find-usages #'index-usages)
-  (reset! index {})
+  (swap! index empty)
   @index
   )
