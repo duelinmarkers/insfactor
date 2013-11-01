@@ -86,7 +86,7 @@
   (reduce #(update-in %1 [%2] dissoc ns-sym) index (keys index)))
 
 (defn index! [ns-sym src-file-path]
-  (let [ns-analysis (ana/analyze-ns ns-sym)]
+  (let [ns-analysis (ana/analyze-ns (ana/pb-reader-for-ns ns-sym) src-file-path ns-sym)]
     (swap! index remove-usages src-file-path)
     (swap! index index-usages src-file-path ns-analysis)))
 
