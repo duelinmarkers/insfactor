@@ -53,13 +53,13 @@
 (defn index-project! []
   (doseq [src-path (find-project-src-paths)
           [src-path relative-src-file-path] (find-src-files src-path)]
-    (try
-      (insfactor/index! (->ns-sym relative-src-file-path)
-                        (.getPath (io/file src-path relative-src-file-path)))
-      (catch Exception e
-        (throw (RuntimeException.
-                (str "Failed while indexing " relative-src-file-path " in " src-path)
-                e))))))
+    (let [full-file-path (.getPath (io/file src-path relative-src-file-path))]
+      (try
+        (println "Indexing" full-file-path)
+        (insfactor/index! (->ns-sym relative-src-file-path)
+                          full-file-path)
+        (catch Exception e
+          (throw (RuntimeException. (str "Failed while indexing " full-file-path) e)))))))
 
 (comment
   (index-project!)
