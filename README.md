@@ -41,9 +41,7 @@ Now go over to [insfactor.el][] and set that up.
 ## Usage
 
 * In Emacs, `nrepl-jack-in` to your project (or whatever you do).
-* In the `*nrepl*` buffer,
-  * `(require 'duelinmarkers.insfactor.project)`
-  * `(duelinmarkers.insfactor.project/index-project!)`
+* Run `M-x insfactor-index-project`
   * Maybe take a look at the `*Messages*` buffer to see that your source
   directories were indexed.
 * Open a source file in your project.
