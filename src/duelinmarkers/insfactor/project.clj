@@ -59,7 +59,7 @@
         (insfactor/index! (->ns-sym relative-src-file-path)
                           full-file-path)
         (catch Exception e
-          (throw (RuntimeException. (str "Failed while indexing " full-file-path) e)))))))
+          (println (str "Failed while indexing " full-file-path ": " e)))))))
 
 (comment
   (index-project!)
