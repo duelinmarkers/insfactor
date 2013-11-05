@@ -16,13 +16,13 @@ You probably want to configure insfactor in your `~/.lein/profiles.clj`
 file rather than in your projects. Here are the entries to add (or merge)
 in the `:user` map in that file.
 
-    :dependencies [[duelinmarkers/insfactor "0.1.0"]]
+    :dependencies [[duelinmarkers/insfactor "0.2.0"]]
     :repl-options {:nrepl-middleware [duelinmarkers.insfactor.nrepl/index-on-load]}
 
 So the whole file might be just the following if you don't have anything
 there yet.
 
-    {:user {:dependencies [[duelinmarkers/insfactor "0.1.0"]]
+    {:user {:dependencies [[duelinmarkers/insfactor "0.2.0"]]
             :repl-options {:nrepl-middleware [duelinmarkers.insfactor.nrepl/index-on-load]}}}
 
 If you prefer to configure insfactor in your project.clj, I'd recommend
@@ -32,7 +32,7 @@ putting it in your `:dev` profile.
       ...
       :profiles {
         :dev {
-          :dependencies [[duelinmarkers/insfactor "0.1.0"]]
+          :dependencies [[duelinmarkers/insfactor "0.2.0"]]
           :repl-options {:nrepl-middleware [duelinmarkers.insfactor.nrepl/index-on-load]}}}
       ...)
 
