@@ -1,42 +1,20 @@
 (ns duelinmarkers.insfactor
   (:require [clojure.zip :as z]
-            [clojure.tools.analyzer :as ana]
+            [clojure.tools.analyzer.jvm :as ana]
             [duelinmarkers.insfactor.zip :as inzip]))
 
 (defonce index (atom {}))
 
-(def op->children-fn {:do :exprs
-                      :if #(seq ((juxt :test :then :else) %))
-                      :def (fn [{:keys [init-provided init]}]
-                             (when init-provided (list init)))
-                      :fn-expr :methods
-                      :fn-method (comp seq :body)
-                      :let (fn [{:keys [binding-inits body]}]
-                             (concat (map :init binding-inits)
-                                     (:exprs body)))
-                      :invoke (fn [{:keys [fexpr args]}]
-                                (cons fexpr args))
-                      :static-method :args
-                      :instance-method (fn [{:keys [target args]}]
-                                         (cons target args))
-                      :map :keyvals
-                      :set :keys
-                      :try (fn [{:keys [try-expr finally-expr catch-exprs]}]
-                             (cons try-expr
-                                   (concat (map :handler catch-exprs)
-                                           (list finally-expr))))
-                      :new :args
-                      :catch (fn [{:keys [handler]}] (list handler))
-                      })
-
 (defn- branch? [node]
   (if (map? node)
-    (contains? op->children-fn (:op node))
+    (contains? node :children)
     (coll? node)))
 
 (defn- children [node]
   (if (map? node)
-    ((op->children-fn (:op node)) node)
+    (mapcat (comp #(if (map? %) [%] %)
+               node)
+            (:children node))
     (seq node)))
 
 (defn zipper [ns-analysis]
@@ -65,10 +43,18 @@
   (condp = op
     :var (list (:var node))
     :the-var (list (:var node))
-    :keyword (list (:val node))
-    :string (list (:val node))
-    :constant (let [{:keys [val]} node]
-                (when (coll? val) (coll->scalar-members val)))
+    :const (let [{:keys [type val]} node]
+             (if (coll? val)
+               (->> val
+                    coll->scalar-members
+                    (filter #(or (keyword? %)
+                                 (string? %)
+                                 (class? %))))
+               (case type
+                 (:keyword :string :class) [val]
+                 (:nil :symbol :number) nil
+                 (println "unhandled const type:" type
+                          "val:" (:val node)))))
     nil))
 
 (defn index-usages [index ns-sym ns-analysis]
@@ -86,7 +72,7 @@
   (reduce #(update-in %1 [%2] dissoc ns-sym) index (keys index)))
 
 (defn index! [ns-sym src-file-path]
-  (let [ns-analysis (ana/analyze-ns (ana/pb-reader-for-ns ns-sym) src-file-path ns-sym)]
+  (let [ns-analysis (ana/analyze-ns ns-sym)]
     (swap! index remove-usages src-file-path)
     (swap! index index-usages src-file-path ns-analysis)))
 

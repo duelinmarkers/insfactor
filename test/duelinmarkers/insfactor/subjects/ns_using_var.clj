@@ -5,9 +5,9 @@
 (def my-something (apply str (reverse deffer/something)))
 
 (defn my-func [s]
-  (str s something)
+  (something s)
   (let [ss something]
-    (str s ss))
+    (str something))
   (try
     (println something)
     (catch Exception e
