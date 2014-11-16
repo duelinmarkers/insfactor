@@ -52,7 +52,7 @@
                                  (class? %))))
                (case type
                  (:keyword :string :class) [val]
-                 (:nil :symbol :number) nil
+                 (:nil :symbol :number :regex) nil
                  (println "unhandled const type:" type
                           "val:" (:val node)))))
     nil))
