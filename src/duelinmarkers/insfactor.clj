@@ -54,7 +54,7 @@
                  (:keyword :string :class) [val]
                  (:nil :symbol :number :regex) nil
                  (println "unhandled const type:" type
-                          "val:" (:val node)))))
+                          "val:" val))))
     nil))
 
 (defn index-usages [index ns-sym ns-analysis]
